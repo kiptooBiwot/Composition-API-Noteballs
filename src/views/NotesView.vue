@@ -5,38 +5,27 @@
 
 import { ref } from 'vue';
 import Note from '@/components/Notes/Note.vue'
+import { useStoreNotes } from '@/store/storeNote'
 
+/**
+ * Store(State Data)
+ */
+const storeNotes = useStoreNotes()
 
 /**
  * Notes
  */
 const newNote = ref('')
 const newNoteRef = ref(null)
-const notes = ref([
-  {
-    id: 1,
-    content: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reiciendis, saepe? Magnam ea quam magni sapiente debitis, minus in iste autem nihil a.Recusandae mollitia in reprehenderit excepturi, modi ex odio.'
-  }
-])
 
 /**
  * Methods
  */
 
 const addNote = () => {
-  const currentDate = new Date().getTime()
-  const id = currentDate.toString()
 
-  let note = {
-    id,
-    content: newNote.value
-  }
-
-  // Add a new note to the top of the array
-  notes.value.unshift(note)
-
+  storeNotes.addNote(newNote.value)
   newNote.value = ''
-
   newNoteRef.value.focus()
 }
 
@@ -45,7 +34,7 @@ const addNote = () => {
  * Delete note [filter]
  */
 const deleteNote = (idToDelete) => {
-  notes.value = notes.value.filter(note => note.id !== idToDelete)
+  storeNotes.deleteNote(idToDelete)
 }
 
 </script>
@@ -70,7 +59,7 @@ const deleteNote = (idToDelete) => {
     </div>
 
     <!-- CARDS -->
-    <Note v-for="note in notes" :key="note.id" :note="note" @deleteClicked="deleteNote" />
+    <Note v-for="note in storeNotes.notes" :key="note.id" :note="note" />
 
   </div>
 </template>
